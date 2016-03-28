@@ -1,0 +1,15 @@
+form {
+	margin-bottom: 10px;
+}
+
+#photos {
+	max-width: 1024px;
+	margin: 0 auto;
+}
+
+#photos img {
+	width: 100%;
+	height: auto;
+	vertical-align: top;
+	margin-bottom: 1px;
+}

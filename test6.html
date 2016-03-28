@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Image test 6</title>
+		<link rel="stylesheet" href="test6.css">
+	</head>
+	<body>
+		<form action="test6.html">
+			<input type="text" name="q">
+			<input type="submit" value="Search">
+		</form>
+		<div id="photos"></div>
+		<script src="jquery-2.2.2.min.js"></script>
+		<script src="flickr-js/flickr.js"></script>
+		<script src="jquery.lazyload.min.js"></script>
+		<script>
+
+		(function($) {
+
+			// If the page was loaded with a 'q' param...
+			if (location.search.substr(0, 3) == '?q=') {
+
+				// We start with location.search, something like ?q=red+panda
+				var query = location.search.substr(3); // drop the first three chars
+				query = decodeURIComponent(query);     // decode the URI encoding
+				query = query.replace(/\+/g, ' ');     // replace all '+' with ' '
+
+				// Insert query into text input
+				$('input[name="q"]').val(query);
+
+				// Create a new Flickr API wrapper object
+				var flickr = new Flickr('1dff816a4f7ef984b178f7ed3eb85582');
+
+				// Set up a callback function to handle the photo results
+				var callback = function(rsp) {
+
+					// Iterate over the results, one photo at a time
+					$.each(rsp.photos.photo, function(i, photo) {
+						var src = photo.src('b');
+						var img = '<img class="lazy" data-original="' + src + '" alt="">';
+						var link = '<a href="' + photo.href() + '">';
+						var close = '</a>';
+						$('#photos').append(link + img + close);
+					});
+
+					// Set up the lazyload plugin
+					$("img.lazy").lazyload({
+						threshold: 200,
+						effect: "fadeIn"
+					});
+
+				};
+
+				// Search for query we derived from the URL
+				flickr.photos.search({
+					tags: query,
+					license: "1,2,3,4,5,6" // All the creative-commons licensed photos
+				}, callback);
+
+			}
+
+		})(jQuery);
+
+		</script>
+	</body>
+</html>
